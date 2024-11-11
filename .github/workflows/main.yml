@@ -19,7 +19,7 @@ jobs:
     - name: Download and Install Localtonet CLI
       run: |
         # Download Localtonet CLI
-        $localtonetUrl = "https://github.com/localtonet/tonet-cli/releases/latest/download/tonet-windows-x64.zip"
+        $localtonetUrl = "https://localtonet.com/download/localtonet-win-64.zip"
         $zipPath = "$env:TEMP\tonet.zip"
         $extractPath = "$env:TEMP\tonet"
         
