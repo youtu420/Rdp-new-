@@ -1,0 +1,48 @@
+name: RDP Tunnel with Localtonet
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Membuat workflow bisa dijalankan secara manual
+
+jobs:
+  setup-rdp-tunnel:
+    runs-on: windows-latest # Menjalankan di Windows Runner
+
+    steps:
+    # Checkout kode dari repository
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # Install Localtonet
+    - name: Download and Install Localtonet CLI
+      run: |
+        # Download Localtonet CLI
+        $localtonetUrl = "https://github.com/localtonet/tonet-cli/releases/latest/download/tonet-windows-x64.zip"
+        $zipPath = "$env:TEMP\tonet.zip"
+        $extractPath = "$env:TEMP\tonet"
+        
+        # Download dan ekstrak file zip Localtonet
+        Invoke-WebRequest -Uri $localtonetUrl -OutFile $zipPath
+        Expand-Archive -Path $zipPath -DestinationPath $extractPath
+
+    # Menyiapkan tunnel untuk RDP
+    - name: Create RDP Tunnel with Localtonet
+      run: |
+        $tonetExe = "$env:TEMP\tonet\tonet.exe"
+        $remoteHost = "127.0.0.1"  # Ganti dengan IP atau hostname tujuan
+        $remotePort = 3389  # Port RDP default
+        $localPort = 3389   # Port lokal yang akan digunakan untuk RDP
+
+        # Menjalankan Localtonet untuk membuat tunnel
+        Start-Process -FilePath $tonetExe -ArgumentList "tcp", "$remoteHost:$remotePort", "localhost:$localPort" -Wait
+
+        # Menunggu tunnel terbentuk (waktu tunggu bisa disesuaikan)
+        Start-Sleep -Seconds 5
+
+    # Menjalankan Remote Desktop Client
+    - name: Launch Remote Desktop Client (mstsc)
+      run: |
+        # Menjalankan mstsc untuk menghubungkan ke localhost pada port yang sudah diteruskan
+        mstsc /v:localhost:3389
