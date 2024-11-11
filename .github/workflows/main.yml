@@ -31,7 +31,7 @@ jobs:
     - name: Create RDP Tunnel with Localtonet
       run: |
         $tonetExe = "$env:TEMP\tonet\tonet.exe"
-        $remoteHost = "127.0.0.1"  # Ganti dengan IP atau hostname tujuan
+        $remoteHost = "skpnc7k.localto.net"  # Ganti dengan IP atau hostname tujuan
         $remotePort = 3389  # Port RDP default
         $localPort = 3389   # Port lokal yang akan digunakan untuk RDP
 
